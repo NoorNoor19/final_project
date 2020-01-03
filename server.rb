@@ -25,11 +25,19 @@ end
 post '/signin' do
     @title= 'Signin'
 
-    User.find_by(email: params[:email], password: params[:password])
-    if @user
+    # params will have password and email
+    # find a user by the email address
+    # compare submitted password to the password of the user you get back
+    form_password = params[:password]
+
+    @user = User.find_by(email: params[:email])
+    
+    if @user && @user.password === form_password
+        session[:user_id]= @user.id #
         redirect '/profile'
     else 
-        puts "wrong passwor or email"
+        puts "wrong password or email"
+        redirect "/signin"
     end
 end
 
@@ -42,19 +50,24 @@ post '/signup' do
    @title = 'Signup'
    puts params
    @user = User.new(params[:user])
+   @user.save
    if @user 
     puts @user
+    session[:user_id] = @user.id # this is the user from the database that we just created
+    # redirect %(/profile/#{@user.id})
+    redirect '/profile'
+
    else
     puts 'not saved'
    end
-   User.create(first_name: params[:name], email: params[:email], password: params[:password])
-   @user.save
-   redirect '/profile'
+   #User.create(first_name: params[:name], email: params[:email], password: params[:password])
 end
 
 get '/signout' do
     @title = 'Signout'
-    erb :signout
+    session[:user_id] = nil
+    # erb :signout
+    redirect '/'
 end
 
 # post '/signout' do
@@ -62,7 +75,12 @@ end
 #     params [ #clear ]]
 # end
 
-# get '/profile/:id' do # will be treated as params id
-#     @user = User.find(params[:id])
-#     erb :profile    
-# endend
+get '/profile' do # will be treated as params id
+    # if user is logged in, find user id by session
+    if session[:user_id]
+        @user = User.find(session[:user_id])
+        erb :profile    
+    else
+        redirect '/'
+    end
+end
