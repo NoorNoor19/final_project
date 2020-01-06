@@ -33,7 +33,7 @@ post '/signin' do
     @user = User.find_by(email: params[:email])
     
     if @user && @user.password === form_password
-        session[:user_id]= @user.id #
+        session[:user_id]= @user.id # now it is that user logged in
         redirect '/profile'
     else 
         puts "wrong password or email"
@@ -83,4 +83,22 @@ get '/profile' do # will be treated as params id
     else
         redirect '/'
     end
+end
+
+# on to creating posts
+get '/create_post' do
+    session[:user_id]
+    if @user
+        erb :create_post
+    endsudo gem install pg — — with-pg-config=/usr/local/Cellar/postgresql/9.5.1/bin/pg_config
+end
+
+
+post 'create_post' do
+    
+  @blog = Blog.new(params[:content])
+    if valid
+        @blog.save
+    end
+    
 end
