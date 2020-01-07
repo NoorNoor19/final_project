@@ -105,3 +105,9 @@ post 'create_post' do #create
     
     
 end
+# #git init 
+# git add .
+# git status
+# git commit -m ""
+# git push ".."
+
