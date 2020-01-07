@@ -5,7 +5,7 @@ require 'sqlite3'
 
 require './models'
 
-set :database, {adapter: "sqlite3", database: "final_project.sqlite3"}
+set :database, {adapter: 'postgresql', database: 'final_project'}
 enable :sessions
 
 get '/' do
@@ -87,18 +87,21 @@ end
 
 # on to creating posts
 get '/create_post' do
+    p "article published!"
     session[:user_id]
-    if @user
-        erb :create_post
-    endsudo gem install pg — — with-pg-config=/usr/local/Cellar/postgresql/9.5.1/bin/pg_config
+    @articles = Posts.new(params[:content])
+    
+    erb :create_post
+    
 end
 
 
-post 'create_post' do
+post 'create_post' do #create
+    @article = Posts.new(title: params['title'], content: params['content'], user_id: session['user_id'])
+    @article.save
+    session[:user_id] = @user.id
+    redirect "/create_post/#{@article.id}"
+  
     
-  @blog = Blog.new(params[:content])
-    if valid
-        @blog.save
-    end
     
 end

@@ -1,10 +1,14 @@
 #h { 
-    color: Red;
+    color: purple;
 }
 .square {
     background-color: black;
     width: 300px;
-    border: 15px solid green;
+    border: 15px solid blue;
     padding: 60px;
     margin: 140px;
+}
+body {
+   background-image: url("bg.jpg");
+   background-color: #cccccc;
 }
