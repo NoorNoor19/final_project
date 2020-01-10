@@ -60,7 +60,6 @@ post '/signup' do
    else
     puts 'not saved'
    end
-   #User.create(first_name: params[:name], email: params[:email], password: params[:password])
 end
 
 get '/signout' do
@@ -69,11 +68,6 @@ get '/signout' do
     # erb :signout
     redirect '/'
 end
-
-# post '/signout' do
-#     @title = 'Signout'
-#     params [ #clear ]]
-# end
 
 get '/profile' do # will be treated as params id
     # if user is logged in, find user id by session
@@ -85,29 +79,51 @@ get '/profile' do # will be treated as params id
     end
 end
 
-# on to creating posts
-get '/create_post' do
-    p "article published!"
-    session[:user_id]
-    @articles = Posts.new(params[:content])
+# # on to creating posts
+# get '/create_post' do
+#     p "article published!"
+#     session[:user_id]
+#     @articles = Posts.new(params[:content])
     
-    erb :create_post
+#     erb :create_post
     
-end
+# end
 
 
-post 'create_post' do #create
-    @article = Posts.new(title: params['title'], content: params['content'], user_id: session['user_id'])
-    @article.save
-    session[:user_id] = @user.id
-    redirect "/create_post/#{@article.id}"
+# post 'create_post' do #create
+#     @article = Posts.new(title: params['title'], content: params['content'], user_id: session['user_id'])
+#     @article.save
+#     session[:user_id] = @user.id
+#     redirect "/create_post/#{@article.id}"
   
-    
-    
+# end
+# # #git init 
+# # git add .
+# # git status
+# # git commit -m ""
+# # git push ".."
+get '/articles/new' do
+    if session['user_id'] == nil
+        p 'User was not logged in'
+        redirect '/'
+    end
+    erb :'/articles/new'
 end
-# #git init 
-# git add .
-# git status
-# git commit -m ""
-# git push ".."
 
+post '/articles/new' do # CREATE
+    p "article published!"
+    p params
+    @article = Post.new(title: params['title'], content: params['content'], user_id: session['user_id'])
+    @article.save
+    redirect "/articles/#{@article.id}"
+end
+
+get '/articles/index' do
+    @articles = Post.all
+    erb :'/articles/index'
+end
+
+get '/articles/:id' do # READ
+    @article = Post.find(params['id'])
+    erb :'/articles/show'
+end
